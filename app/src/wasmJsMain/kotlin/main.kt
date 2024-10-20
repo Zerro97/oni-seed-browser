@@ -50,6 +50,11 @@ fun main() {
             println(data)
         }
 
+        // Extract query parameters from the URL
+        // TODO: Currently it shows query param as plain string (ex. "?embedded=mni"). String needs to parsed appropriately
+        val queryParams = remember {document.location?.search.orEmpty()}
+        println(queryParams)
+
         App(urlHash)
     }
 }
