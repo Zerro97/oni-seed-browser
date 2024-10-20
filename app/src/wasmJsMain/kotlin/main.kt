@@ -23,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.MessageEvent
 import ui.App
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -39,8 +40,14 @@ fun main() {
         }
 
         window.onhashchange = {
-
             urlHash.value = it.newURL.substringAfter('#', "").ifBlank { null }
+        }
+
+        // Listener for locale change
+        window.addEventListener("locale") { event ->
+            val messageEvent = event as MessageEvent
+            val data = messageEvent.data
+            println(data)
         }
 
         App(urlHash)
