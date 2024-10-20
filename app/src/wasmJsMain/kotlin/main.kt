@@ -44,7 +44,7 @@ fun main() {
         }
 
         // Listener for locale change
-        window.addEventListener("locale") { event ->
+        window.addEventListener("message") { event ->
             val messageEvent = event as MessageEvent
             val data = messageEvent.data
             println(data)
