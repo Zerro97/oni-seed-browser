@@ -17,19 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.MessageEvent
 import ui.App
+import ui.LocalAppLocale
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-
     CanvasBasedWindow(canvasElementId = "ComposeTarget") {
+        var currentLocale by remember { mutableStateOf("en") }
 
         val domain = document.domain
 
@@ -46,15 +50,20 @@ fun main() {
         // Listener for locale change
         window.addEventListener("message") { event ->
             val messageEvent = event as MessageEvent
-            val data = messageEvent.data
-            println(data)
+            val data = messageEvent.data.toString()
+
+            if(data != "dispatchCoroutine") {
+                currentLocale = data
+            }
         }
 
         // Extract query parameters from the URL
         // TODO: Currently it shows query param as plain string (ex. "?embedded=mni"). String needs to parsed appropriately
-        val queryParams = remember {document.location?.search.orEmpty()}
-        println(queryParams)
+        // val queryParams = remember {document.location?.search.orEmpty()}
 
-        App(urlHash)
+        CompositionLocalProvider(LocalAppLocale provides currentLocale) {
+            App(urlHash)
+        }
     }
 }
+
